@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubik's Cube Solver</title>
+    <link rel="stylesheet" href="style1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rubik's Cube Solver</h1>
+            <p class="subtitle">AI-Powered Puzzle Solution Generator</p>
+        </header>
+
+        <section class="input-mode-section">
+            <h2>Input Method</h2>
+            <div class="mode-buttons">
+                <button id="manualModeBtn" class="mode-btn active">Manual Input</button>
+                <button id="cameraModeBtn" class="mode-btn">Camera/Upload</button>
+            </div>
+        </section>
+
+        <section id="manualMode" class="input-section">
+            <h2>Configure Cube State</h2>
+            <div class="color-selector">
+                <p class="label">Select Color:</p>
+                <div class="color-palette">
+                    <div class="color-btn" data-color="white" style="background-color: #FFFFFF;"></div>
+                    <div class="color-btn" data-color="yellow" style="background-color: #FFD700;"></div>
+                    <div class="color-btn active" data-color="red" style="background-color: #FF3333;"></div>
+                    <div class="color-btn" data-color="orange" style="background-color: #FF8C00;"></div>
+                    <div class="color-btn" data-color="green" style="background-color: #00AA00;"></div>
+                    <div class="color-btn" data-color="blue" style="background-color: #0066FF;"></div>
+                </div>
+            </div>
+            <div class="cube-container">
+                <div class="cube-row">
+                    <div class="empty-space"></div>
+                    <div class="face-wrapper">
+                        <div class="face-label">Up (White)</div>
+                        <div class="cube-face" data-face="U"></div>
+                    </div>
+                    <div class="empty-space"></div>
+                </div>
+                <div class="cube-row">
+                    <div class="face-wrapper">
+                        <div class="face-label">Left (Orange)</div>
+                        <div class="cube-face" data-face="L"></div>
+                    </div>
+                    <div class="face-wrapper">
+                        <div class="face-label">Front (Green)</div>
+                        <div class="cube-face" data-face="F"></div>
+                    </div>
+                    <div class="face-wrapper">
+                        <div class="face-label">Right (Red)</div>
+                        <div class="cube-face" data-face="R"></div>
+                    </div>
+                </div>
+                <div class="cube-row">
+                    <div class="empty-space"></div>
+                    <div class="face-wrapper">
+                        <div class="face-label">Down (Yellow)</div>
+                        <div class="cube-face" data-face="D"></div>
+                    </div>
+                    <div class="empty-space"></div>
+                </div>
+                <div class="cube-row">
+                    <div class="empty-space"></div>
+                    <div class="face-wrapper">
+                        <div class="face-label">Back (Blue)</div>
+                        <div class="cube-face" data-face="B"></div>
+                    </div>
+                    <div class="empty-space"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cameraMode" class="input-section hidden">
+            <h2>Capture Cube Faces</h2>
+            <div class="face-selection">
+                <p class="label">Select Face to Capture:</p>
+                <div class="face-buttons">
+                    <button class="face-btn active" data-face="U">Up (White)</button>
+                    <button class="face-btn" data-face="R">Right (Red)</button>
+                    <button class="face-btn" data-face="F">Front (Green)</button>
+                    <button class="face-btn" data-face="D">Down (Yellow)</button>
+                    <button class="face-btn" data-face="L">Left (Orange)</button>
+                    <button class="face-btn" data-face="B">Back (Blue)</button>
+                </div>
+            </div>
+            <div class="camera-controls">
+                <button id="startCameraBtn" class="control-btn camera-btn"><span class="icon">📷</span> Start Camera</button>
+                <button id="captureBtn" class="control-btn capture-btn hidden"><span class="icon">📸</span> Capture Face</button>
+                <button id="stopCameraBtn" class="control-btn stop-btn hidden"><span class="icon">⏹</span> Stop Camera</button>
+                <button id="uploadBtn" class="control-btn upload-btn"><span class="icon">📁</span> Upload Image</button>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+            <div id="cameraView" class="camera-view hidden">
+                <video id="video" autoplay playsinline></video>
+            </div>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <div class="preview-section">
+                <h3>Current State Preview</h3>
+                <div class="cube-container preview">
+                    <div class="cube-row">
+                        <div class="empty-space"></div>
+                        <div class="face-wrapper"><div class="face-label">Up (White)</div><div class="cube-face preview" data-face="U"></div></div>
+                        <div class="empty-space"></div>
+                    </div>
+                    <div class="cube-row">
+                        <div class="face-wrapper"><div class="face-label">Left (Orange)</div><div class="cube-face preview" data-face="L"></div></div>
+                        <div class="face-wrapper"><div class="face-label">Front (Green)</div><div class="cube-face preview" data-face="F"></div></div>
+                        <div class="face-wrapper"><div class="face-label">Right (Red)</div><div class="cube-face preview" data-face="R"></div></div>
+                    </div>
+                    <div class="cube-row">
+                        <div class="empty-space"></div>
+                        <div class="face-wrapper"><div class="face-label">Down (Yellow)</div><div class="cube-face preview" data-face="D"></div></div>
+                        <div class="empty-space"></div>
+                    </div>
+                    <div class="cube-row">
+                        <div class="empty-space"></div>
+                        <div class="face-wrapper"><div class="face-label">Back (Blue)</div><div class="cube-face preview" data-face="B"></div></div>
+                        <div class="empty-space"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="action-buttons">
+            <button id="solveBtn" class="action-btn solve-btn"><span class="icon">▶</span> Solve Cube</button>
+            <button id="resetBtn" class="action-btn reset-btn"><span class="icon">↻</span> Reset</button>
+        </div>
+
+        <section id="solutionSection" class="solution-section hidden">
+            <div class="solution-header">
+                <h2>Solution — <span id="moveCount">0</span> moves</h2>
+                <div class="view-toggle">
+                    <button id="toggleCardsBtn" class="toggle-btn active" title="Step-by-step cards">🃏 Steps</button>
+                    <button id="toggleVideoBtn" class="toggle-btn" title="Video playback">🎬 Video</button>
+                </div>
+            </div>
+
+            <div id="cardsView">
+                <div id="solutionSteps" class="solution-steps"></div>
+
+                <div class="step-card-area">
+                    <div id="stepCard" class="step-card">
+                        <div class="step-card-header">
+                            <span class="step-number">Step <span id="cardStepNum">1</span></span>
+                            <span class="step-move-badge" id="cardMoveName">—</span>
+                        </div>
+                        <div class="step-card-body">
+                            <div class="diagram-wrap">
+                                <canvas id="moveDiagram" width="280" height="280"></canvas>
+                            </div>
+                            <div class="step-explanation">
+                                <div class="move-title" id="moveTitleText"></div>
+                                <div class="move-desc" id="moveDescText"></div>
+                                <div class="move-tip" id="moveTipText"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="playback-controls">
+                    <button id="prevBtn" class="playback-btn" title="Previous">⏮ Prev</button>
+                    <button id="playPauseBtn" class="playback-btn play" id="playPauseBtn">▶ Play</button>
+                    <button id="nextBtn" class="playback-btn" title="Next">Next ⏭</button>
+                    <div class="speed-wrap">
+                        <label>Speed</label>
+                        <select id="speedSelect" class="speed-select">
+                            <option value="2000">0.5×</option>
+                            <option value="1000" selected>1×</option>
+                            <option value="600">1.5×</option>
+                            <option value="400">2×</option>
+                            <option value="200">3×</option>
+                        </select>
+                    </div>
+                    <span class="step-counter">Step <span id="currentStep">0</span> / <span id="totalSteps">0</span></span>
+                </div>
+            </div>
+
+            <div id="videoView" class="hidden">
+                <div class="video-player-wrap">
+                    <canvas id="videoCanvas" width="700" height="420"></canvas>
+                    <div class="video-overlay" id="videoOverlay">
+                        <button class="big-play-btn" id="bigPlayBtn">▶</button>
+                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="vc-btn" id="vcRewind" title="Restart">⏮</button>
+                    <button class="vc-btn" id="vcPlayPause" title="Play/Pause">▶</button>
+                    <button class="vc-btn" id="vcFwd" title="Skip forward">⏭</button>
+                    <div class="vc-progress-wrap">
+                        <div class="vc-progress-bar" id="vcProgressBar">
+                            <div class="vc-progress-fill" id="vcProgressFill"></div>
+                            <div class="vc-thumb" id="vcThumb"></div>
+                        </div>
+                    </div>
+                    <div class="vc-speed-group">
+                        <span>Speed</span>
+                        <button class="speed-pill" data-speed="0.5">0.5×</button>
+                        <button class="speed-pill active" data-speed="1">1×</button>
+                        <button class="speed-pill" data-speed="1.5">1.5×</button>
+                        <button class="speed-pill" data-speed="2">2×</button>
+                    </div>
+                    <span class="vc-counter"><span id="vcCurrent">0</span> / <span id="vcTotal">0</span></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
